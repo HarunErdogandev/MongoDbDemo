@@ -11,14 +11,15 @@ namespace MongoDbDemo
             string databaseName = "simple_db";
             string collectionName = "people";
 
-            var client = new MongoClient(ConnectionString);
 
-            var db = client.GetDatabase(databaseName);
+
+            var db = DbContext.GetDb();
             var collection = db.GetCollection<PersonModel>(collectionName);
 
             var person = new PersonModel { FirstName = "Tim", LastName = "Corey" };
 
             await collection.InsertOneAsync(person);
+
 
             var results = await collection.FindAsync(_ => true);
 
