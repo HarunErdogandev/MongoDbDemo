@@ -71,5 +71,18 @@ namespace MongoDataAccess.DataAccess
             var choresCollection = ConnectToMongo<ChoreModel>(ChoreCollection);
             return choresCollection.DeleteOneAsync(c => c.Id == chore.Id);
         }
+
+        public async Task CompleteChore(ChoreModel chore)
+        {
+            var choresCollection = ConnectToMongo<ChoreModel>(ChoreCollection);
+            var filter =Builders<ChoreModel>.Filter.Eq("Id",chore.Id);
+            await choresCollection.ReplaceOneAsync(filter, chore);
+
+
+            var choreHistoryCollection = ConnectToMongo<ChoreHistoryModel>(ChoreHistoryCollection);
+            await choreHistoryCollection.InsertOneAsync(new ChoreHistoryModel(chore));
+
+
+        }
     }
 }
