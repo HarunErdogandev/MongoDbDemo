@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using MongoDataAccess.DataAccess;
+using MongoDataAccess.Models;
+using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 
 namespace MongoDbDemo
@@ -7,26 +9,20 @@ namespace MongoDbDemo
     {
         static async Task Main(string[] args)
         {
-            const string ConnectionString = "mongodb://localhost:27017";
-            string databaseName = "simple_db";
-            string collectionName = "people";
+           ChoreDataAccess db= new ChoreDataAccess();
 
+            await db.CreateUser(new UserModel { FirstName = "Timm", LastName = "Corey" });
 
+            var users = await db.GetAllUsers();
 
-            var db = DbContext.GetDb();
-            var collection = db.GetCollection<PersonModel>(collectionName);
+            var chore = new ChoreModel 
+            { 
+                AssignedTo = users.First(), 
+                ChoreText = "Mow the lawn", 
+                FrequencyInDays = 7 ,
 
-            var person = new PersonModel { FirstName = "Tim", LastName = "Corey" };
-
-            await collection.InsertOneAsync(person);
-
-
-            var results = await collection.FindAsync(_ => true);
-
-            foreach (var result in results.ToList())
-            {
-                Console.WriteLine($"{result.Id}: {result.FirstName}  {result.LastName}");
-            }
+            }; 
+            await db.CreateChore(chore);
 
         }
     }

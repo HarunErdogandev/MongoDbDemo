@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MongoDbDemo
+namespace MongoDataAccess.Models
 {
-    public class PersonModel
+    public class UserModel
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -16,6 +16,5 @@ namespace MongoDbDemo
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}";
-
     }
 }
